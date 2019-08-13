@@ -1,11 +1,20 @@
 {
   "name": "h5-indicator",
-  "version": "1.0.2",
-  "main": "index.js",
+  "version": "1.0.3",
+  "main": "lib/index.js",
   "repository": "git@github.com:wen911119/h5-indicator.git",
   "author": "wen911119 <wen911119@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "babel index.js -d lib"
+  },
   "dependencies": {
     "p-to-r": "^1.0.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.5.5"
   }
 }
