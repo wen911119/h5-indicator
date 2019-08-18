@@ -84,10 +84,11 @@ class Indicator {
       config
     );
     this.loadingCount++;
-    setTimeout(this.hideLoading, mergeConfig.timeout);
     showIndicator(mergeConfig);
+    return setTimeout(this.hideLoading, mergeConfig.timeout);
   };
-  hideLoading = () => {
+  hideLoading = loadingId => {
+    clearTimeout(loadingId);
     this.loadingCount--;
     if (this.loadingCount <= 0) {
       hideIndicator("loading");
