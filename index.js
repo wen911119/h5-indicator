@@ -69,10 +69,10 @@ const hideIndicator = type => {
   }
 };
 
-class Indicator {
-  loadingCount = 0;
-  toastCount = 0;
-  showLoading = config => {
+export default {
+  loadingCount: 0,
+  toastCount: 0,
+  showLoading: function(config) {
     const mergeConfig = Object.assign(
       {
         timeout: 20000,
@@ -86,17 +86,17 @@ class Indicator {
     this.loadingCount++;
     showIndicator(mergeConfig);
     return setTimeout(this.hideLoading, mergeConfig.timeout);
-  };
-  hideLoading = loadingId => {
+  },
+  hideLoading =  function(loadingId) {
     clearTimeout(loadingId);
     this.loadingCount--;
     if (this.loadingCount <= 0) {
       hideIndicator("loading");
       this.loadingCount = 0;
     }
-  };
-  toast = (text = "", config) => {
-    let showText = text;
+  },
+  toast: function(text, config){
+    let showText = text || "";
     if (typeof text === "object") {
       showText = text.message || JSON.stringify(text);
     }
@@ -114,14 +114,12 @@ class Indicator {
     this.toastCount++;
     setTimeout(this.hideToast, mergeConfig.timeout);
     showIndicator(mergeConfig);
-  };
-  hideToast = () => {
+  },
+  hideToast: function(){
     this.toastCount--;
     if (this.toastCount <= 0) {
       hideIndicator("toast");
       this.toastCount = 0;
     }
-  };
-}
-
-export default new Indicator();
+  }
+};
