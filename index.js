@@ -85,7 +85,7 @@ export default {
     );
     this.loadingCount++;
     showIndicator(mergeConfig);
-    return setTimeout(this.hideLoading, mergeConfig.timeout);
+    return setTimeout(this.hideLoading.bind(this), mergeConfig.timeout);
   },
   hideLoading: function(loadingId) {
     clearTimeout(loadingId);
@@ -102,7 +102,7 @@ export default {
     }
     const mergeConfig = Object.assign(
       {
-        timeout: 1500,
+        timeout: 2000,
         textColor: "#fff",
         textSize: 26,
         type: "toast",
@@ -112,7 +112,7 @@ export default {
       config
     );
     this.toastCount++;
-    setTimeout(this.hideToast, mergeConfig.timeout);
+    setTimeout(this.hideToast.bind(this), mergeConfig.timeout);
     showIndicator(mergeConfig);
   },
   hideToast: function() {
