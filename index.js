@@ -4,14 +4,15 @@ const styleEl = document.createElement("style");
 styleEl.innerHTML = `._____loading_mask_______{position:fixed;z-index:999;width:100%;height:100%;top:0;left:0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}@-webkit-keyframes __spinner_{0%{opacity:1}100%{opacity:0}}@keyframes __spinner_{0%{opacity:1}100%{opacity:0}}.__spinner_{position:relative}.__spinner_ div{left:.44em;top:0;position:absolute;-webkit-animation:__spinner_ linear .6s infinite;animation:__spinner_ linear .6s infinite;width:.1em;height:.3em;border-radius:30%;-webkit-transform-origin:.05em .5em;-ms-transform-origin:.05em .5em;transform-origin:.05em .5em}.__spinner_ div:nth-child(1){-webkit-transform:rotate(0);-ms-transform:rotate(0);transform:rotate(0);-webkit-animation-delay:-.55s;animation-delay:-.55s}.__spinner_ div:nth-child(2){-webkit-transform:rotate(30deg);-ms-transform:rotate(30deg);transform:rotate(30deg);-webkit-animation-delay:-.5s;animation-delay:-.5s}.__spinner_ div:nth-child(3){-webkit-transform:rotate(60deg);-ms-transform:rotate(60deg);transform:rotate(60deg);-webkit-animation-delay:-.45s;animation-delay:-.45s}.__spinner_ div:nth-child(4){-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg);-webkit-animation-delay:-.4s;animation-delay:-.4s}.__spinner_ div:nth-child(5){-webkit-transform:rotate(120deg);-ms-transform:rotate(120deg);transform:rotate(120deg);-webkit-animation-delay:-.35s;animation-delay:-.35s}.__spinner_ div:nth-child(6){-webkit-transform:rotate(150deg);-ms-transform:rotate(150deg);transform:rotate(150deg);-webkit-animation-delay:-.3s;animation-delay:-.3s}.__spinner_ div:nth-child(7){-webkit-transform:rotate(180deg);-ms-transform:rotate(180deg);transform:rotate(180deg);-webkit-animation-delay:-.25s;animation-delay:-.25s}.__spinner_ div:nth-child(8){-webkit-transform:rotate(210deg);-ms-transform:rotate(210deg);transform:rotate(210deg);-webkit-animation-delay:-.2s;animation-delay:-.2s}.__spinner_ div:nth-child(9){-webkit-transform:rotate(240deg);-ms-transform:rotate(240deg);transform:rotate(240deg);-webkit-animation-delay:-.15s;animation-delay:-.15s}.__spinner_ div:nth-child(10){-webkit-transform:rotate(270deg);-ms-transform:rotate(270deg);transform:rotate(270deg);-webkit-animation-delay:-.1s;animation-delay:-.1s}.__spinner_ div:nth-child(11){-webkit-transform:rotate(300deg);-ms-transform:rotate(300deg);transform:rotate(300deg);-webkit-animation-delay:-50ms;animation-delay:-50ms}.__spinner_ div:nth-child(12){-webkit-transform:rotate(330deg);-ms-transform:rotate(330deg);transform:rotate(330deg);-webkit-animation-delay:0s;animation-delay:0s}`;
 document.head.appendChild(styleEl);
 
-const showIndicator = function(config) {
-  const mask = config.mask;
-  const size = config.size;
-  const color = config.color;
-  const text = config.text;
-  const type = config.type;
-  const textSize = config.textSize;
-  const textColor = config.textColor;
+const showIndicator = ({
+  mask,
+  size,
+  color,
+  text,
+  type,
+  textSize,
+  textColor
+}) => {
   let indicatorElement = document.getElementById(
     `___wj_l-o-a-d-i-n-g____${type}`
   );
@@ -59,20 +60,19 @@ const showIndicator = function(config) {
     span.style.color = px2rem(textColor);
   }
 };
-
-function hideIndicator(type) {
+const hideIndicator = type => {
   const indicatorElement = document.getElementById(
     `___wj_l-o-a-d-i-n-g____${type}`
   );
   if (indicatorElement) {
     indicatorElement.parentNode.removeChild(indicatorElement);
   }
-}
+};
 
-export default {
-  loadingCount: 0,
-  toastCount: 0,
-  showLoading: function(config) {
+class Indicator {
+  loadingCount = 0;
+  toastCount = 0;
+  showLoading = config => {
     const mergeConfig = Object.assign(
       {
         timeout: 20000,
@@ -85,24 +85,24 @@ export default {
     );
     this.loadingCount++;
     showIndicator(mergeConfig);
-    return setTimeout(this.hideLoading.bind(this), mergeConfig.timeout);
-  },
-  hideLoading: function(loadingId) {
+    return setTimeout(this.hideLoading, mergeConfig.timeout);
+  };
+  hideLoading = loadingId => {
     clearTimeout(loadingId);
     this.loadingCount--;
     if (this.loadingCount <= 0) {
       hideIndicator("loading");
       this.loadingCount = 0;
     }
-  },
-  toast: function(text, config) {
-    let showText = text || "";
+  };
+  toast = (text = "", config) => {
+    let showText = text;
     if (typeof text === "object") {
       showText = text.message || JSON.stringify(text);
     }
     const mergeConfig = Object.assign(
       {
-        timeout: 2000,
+        timeout: 1500,
         textColor: "#fff",
         textSize: 26,
         type: "toast",
@@ -112,14 +112,16 @@ export default {
       config
     );
     this.toastCount++;
-    setTimeout(this.hideToast.bind(this), mergeConfig.timeout);
+    setTimeout(this.hideToast, mergeConfig.timeout);
     showIndicator(mergeConfig);
-  },
-  hideToast: function() {
+  };
+  hideToast = () => {
     this.toastCount--;
     if (this.toastCount <= 0) {
       hideIndicator("toast");
       this.toastCount = 0;
     }
-  }
-};
+  };
+}
+
+export default new Indicator();
