@@ -19,6 +19,7 @@ const showIndicator = ({
   if (!indicatorElement) {
     indicatorElement = document.createElement("div");
     indicatorElement.id = `___wj_l-o-a-d-i-n-g____${type}`;
+    indicatorElement.ontouchmove = e => e.cancelable && e.preventDefault();
     indicatorElement.className = "_____loading_mask_______";
     indicatorElement.style.backgroundColor = `rgba(0,0,0, ${mask})`;
     if (type === "loading") {
